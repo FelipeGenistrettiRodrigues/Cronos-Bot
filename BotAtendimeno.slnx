@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="Api.CronosBot/Api.CronosBot.csproj" />
+  <Project Path="Application.CronosBot/Application.CronosBot.csproj" />
+  <Project Path="Communication.CronosBot/Communication.CronosBot.csproj" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+  <Project Path="Domain.CronosBot/Domain.CronosBot.csproj" />
+  <Project Path="Infrastructure.CronosBot/Infrastructure.CronosBot.csproj" />
+</Solution>

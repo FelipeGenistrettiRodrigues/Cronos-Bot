@@ -1,0 +1,126 @@
+name: dockercompose3696209092032833778
+services:
+  api.cronosbot:
+    build:
+      context: C:\Users\FELIPE\Downloads\csharp\BotAtendimeno
+      dockerfile: Api.CronosBot/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
+    image: apicronosbot
+    networks:
+      cronos_network: null
+    ports:
+      - mode: ingress
+        target: 8080
+        protocol: tcp
+      - mode: ingress
+        target: 8081
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\Users\FELIPE\AppData\Roaming/Microsoft/UserSecrets
+        target: /home/app/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\FELIPE\AppData\Roaming/Microsoft/UserSecrets
+        target: /root/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\FELIPE\AppData\Roaming/ASP.NET/Https
+        target: /home/app/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\FELIPE\AppData\Roaming/ASP.NET/Https
+        target: /root/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+  evolution-api:
+    container_name: evolution_api
+    depends_on:
+      postgres_db:
+        condition: service_started
+        required: true
+      redis_cache:
+        condition: service_started
+        required: true
+    environment:
+      API_KEY: ChaveSecretaDoFelipe123
+      AUTHENTICATION_API_KEY: ChaveSecretaDoFelipe123
+      CACHE_PROVIDER: redis
+      DATABASE_CONNECTION_CLIENT: pg
+      DATABASE_CONNECTION_URI: postgresql://postgres:SuaSenhaSegura123@postgres_db:5432/evolution_db?schema=public
+      DATABASE_PROVIDER: postgresql
+      ENV: dev
+      REDIS_ENABLED: "true"
+      REDIS_URI: redis://redis_cache:6379
+      SERVER_URL: http://localhost:8081
+    image: evoapicloud/evolution-api:v2.1.1
+    networks:
+      cronos_network: null
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8081"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: volume
+        source: evolution_instances
+        target: /evolution/instances
+        volume: {}
+  postgres_db:
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: evolution_db
+      POSTGRES_PASSWORD: SuaSenhaSegura123
+      POSTGRES_USER: postgres
+    image: postgres:15-alpine
+    networks:
+      cronos_network: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: volume
+        source: postgres_data
+        target: /var/lib/postgresql/data
+        volume: {}
+  redis_cache:
+    container_name: redis_cache
+    image: redis:7-alpine
+    networks:
+      cronos_network: null
+    ports:
+      - mode: ingress
+        target: 6379
+        published: "6379"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: volume
+        source: redis_data
+        target: /data
+        volume: {}
+networks:
+  cronos_network:
+    name: dockercompose3696209092032833778_cronos_network
+    driver: bridge
+volumes:
+  evolution_instances:
+    name: dockercompose3696209092032833778_evolution_instances
+  postgres_data:
+    name: dockercompose3696209092032833778_postgres_data
+  redis_data:
+    name: dockercompose3696209092032833778_redis_data

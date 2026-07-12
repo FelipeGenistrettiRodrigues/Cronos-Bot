@@ -1,0 +1,17 @@
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\bin\Debug\net10.0\Infrastructure.CronosBot.deps.json
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\bin\Debug\net10.0\Infrastructure.CronosBot.dll
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\bin\Debug\net10.0\Infrastructure.CronosBot.pdb
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\bin\Debug\net10.0\Communication.CronosBot.dll
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\bin\Debug\net10.0\Domain.CronosBot.dll
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\bin\Debug\net10.0\Communication.CronosBot.pdb
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\bin\Debug\net10.0\Domain.CronosBot.pdb
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\Infrastructure.CronosBot.csproj.AssemblyReference.cache
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\Infrastructure.CronosBot.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\Infrastructure.CronosBot.AssemblyInfoInputs.cache
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\Infrastructure.CronosBot.AssemblyInfo.cs
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\Infrastructure.CronosBot.csproj.CoreCompileInputs.cache
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\Infrastr.6973F198.Up2Date
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\Infrastructure.CronosBot.dll
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\refint\Infrastructure.CronosBot.dll
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\Infrastructure.CronosBot.pdb
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\ref\Infrastructure.CronosBot.dll

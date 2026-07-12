@@ -1,0 +1,58 @@
+﻿using System;
+using Domain.CronosBot.Models.Enums;
+
+namespace Domain.CronosBot.Models
+{
+    public class ChatSession
+    {
+        public string Id { get; private set; }
+        public ChatStep CurrentStep { get; private set; }
+        public DateTime LastInteraction { get; private set; }
+        public string UserId { get; private set; }
+        public User User { get; private set; }
+        public string PhoneId { get; private set; }
+        public ProdutoDesejado ProdutoEscolhido { get; private set; }
+        public bool IsActive { get; private set; }
+
+        protected ChatSession() { }
+
+        public ChatSession(string userId, string phoneId)
+        {
+            Id = Guid.NewGuid().ToString();
+            UserId = userId ?? throw new ArgumentNullException(nameof(userId));
+            PhoneId = phoneId ?? throw new ArgumentNullException(nameof(phoneId));
+            CurrentStep = ChatStep.NovoLead;
+            LastInteraction = DateTime.UtcNow;
+            IsActive = true;
+        }
+
+        public void MoveToNextStep(ChatStep nextStep)
+        {
+            CurrentStep = nextStep;
+            LastInteraction = DateTime.UtcNow;
+        }
+
+        public void SetIsActive(bool active)
+        {
+            IsActive = active;
+        }
+
+        public bool IsExpired()
+        {
+            var expirationTime = TimeSpan.FromDays(14);
+
+            bool passouDoTempo = DateTime.UtcNow - LastInteraction > expirationTime;
+
+            if (passouDoTempo)
+            {
+                SetIsActive(false);
+            }
+            return passouDoTempo;
+        }
+
+        public void RegistrarProdutoEscolhido(ProdutoDesejado produto)
+        {
+            ProdutoEscolhido = produto;
+        }
+    }
+}

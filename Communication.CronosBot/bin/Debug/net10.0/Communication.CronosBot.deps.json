@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "Communication.CronosBot/1.0.0": {
+        "runtime": {
+          "Communication.CronosBot.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Communication.CronosBot/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

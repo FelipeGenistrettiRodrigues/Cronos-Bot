@@ -1,0 +1,58 @@
+name: cronosbot
+
+services:
+  api.cronosbot:
+    image: ${DOCKER_REGISTRY-}apicronosbot
+    build:
+      context: .
+      dockerfile: Api.CronosBot/Dockerfile
+    ports:
+      - "8085:8080"
+    restart: always
+    environment:
+      - ConnectionStrings__Connection=Host=postgres_db;Port=5432;Database=evolution_db;Username=postgres;Password=postgresadmin
+      - ASPNETCORE_URLS=http://+:8080
+      - EvolutionApi__BaseUrl=http://evolution-api:8080
+    depends_on:
+      - postgres_db
+
+  evolution-api:
+    image: evoapicloud/evolution-api:latest
+    restart: always
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      - SERVER_URL=http://localhost:8083
+      - ENV=dev
+      - API_KEY=a8f3c7d2-61b5-4e9a-bc04-83e215d74f69
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_CONNECTION_CLIENT=pg
+      - DATABASE_CONNECTION_URI=postgresql://postgres:postgresadmin@postgres_db:5432/evolution_db?schema=public
+      - AUTHENTICATION_API_KEY=a8f3c7d2-61b5-4e9a-bc04-83e215d74f69
+      - CACHE_REDIS_ENABLED=false
+      - CACHE_LOCAL_ENABLED=true
+      - LOG_LEVEL=ERROR,WARN,DEBUG,INFO,LOG,VERBOSE,SILLY
+    ports:
+      - "8083:8080"
+    volumes:
+      - evolution_instances:/evolution/instances
+    depends_on:
+      - postgres_db
+
+  postgres_db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgresadmin
+      - POSTGRES_DB=evolution_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+# CORRIGIDO: Seção global de volumes isolada corretamente aqui embaixo
+volumes:
+  evolution_instances:
+  postgres_data:
