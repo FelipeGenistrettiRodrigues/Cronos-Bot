@@ -1,3 +1,4 @@
+using Api.CronosBot.FIlters;
 using Application.CronosBot;
 using Application.CronosBot.UseCases.CallApiEvolution;
 using Application.CronosBot.UseCases.FlowEngine;
@@ -15,6 +16,7 @@ builder.Services.AddHttpClient<IWhatsappProvider, EvolutionApiProvider>((provide
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddScoped<ApiKeyAuthFilter>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

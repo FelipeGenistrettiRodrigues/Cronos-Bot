@@ -1,4 +1,5 @@
-﻿using Application.CronosBot.UseCases.FlowEngine;
+﻿using Api.CronosBot.FIlters;
+using Application.CronosBot.UseCases.FlowEngine;
 using AutoMapper;
 using Communication.CronosBot.EvolutionWebHook.Request;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,7 @@ namespace Api.CronosBot.Controllers
         }
 
         [HttpPost("webhook")]
+        [ServiceFilter(typeof(ApiKeyAuthFilter))]
         public async Task<IActionResult> ReceiveMessage([FromBody] WebhookPayload payload)
         {
             if (payload?.Data?.Key == null)
