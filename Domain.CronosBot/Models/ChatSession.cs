@@ -13,6 +13,8 @@ namespace Domain.CronosBot.Models
         public string PhoneId { get; private set; }
         public ProdutoDesejado ProdutoEscolhido { get; private set; }
         public bool IsActive { get; private set; }
+        public bool hasPrescription { get; private set; }
+        public DateTime? ReminderSentAt { get; private set; }
 
         protected ChatSession() { }
 
@@ -24,6 +26,7 @@ namespace Domain.CronosBot.Models
             CurrentStep = ChatStep.NovoLead;
             LastInteraction = DateTime.UtcNow;
             IsActive = true;
+            hasPrescription = false;
         }
 
         public void MoveToNextStep(ChatStep nextStep)
@@ -35,6 +38,17 @@ namespace Domain.CronosBot.Models
         public void SetIsActive(bool active)
         {
             IsActive = active;
+        }
+
+        public void SetPrescription(bool prescription)
+        {
+            hasPrescription = prescription;
+            LastInteraction = DateTime.UtcNow;
+        }
+
+        public void MarcarLembreteEnviado()
+        {
+            ReminderSentAt = DateTime.UtcNow;
         }
 
         public bool IsExpired()

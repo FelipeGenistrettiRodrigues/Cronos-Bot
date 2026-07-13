@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Application.CronosBot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6be0eb05f731c3a38bad298eb2a1a938eef90aab")]
 [assembly: System.Reflection.AssemblyProductAttribute("Application.CronosBot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Application.CronosBot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

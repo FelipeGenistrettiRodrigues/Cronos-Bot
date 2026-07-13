@@ -15,3 +15,4 @@ C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debu
 C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\refint\Infrastructure.CronosBot.dll
 C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\Infrastructure.CronosBot.pdb
 C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\ref\Infrastructure.CronosBot.dll
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Infrastructure.CronosBot\obj\Debug\net10.0\Infrastructure.CronosBot.sourcelink.json

@@ -44,9 +44,15 @@ namespace Infrastructure.CronosBot.Migrations
                     b.Property<int>("ProdutoEscolhido")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("ReminderSentAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("hasPrescription")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

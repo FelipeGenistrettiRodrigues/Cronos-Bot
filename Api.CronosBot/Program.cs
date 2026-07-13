@@ -2,6 +2,9 @@ using Api.CronosBot.FIlters;
 using Application.CronosBot;
 using Application.CronosBot.UseCases.CallApiEvolution;
 using Application.CronosBot.UseCases.FlowEngine;
+using Hangfire;
+using Hangfire.Dashboard;
+using Hangfire.PostgreSql;
 using Infrastructure.CronosBot;
 using Infrastructure.CronosBot.Migrations;
 
@@ -21,6 +24,16 @@ builder.Services.AddScoped<ApiKeyAuthFilter>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(options =>
+        options.UseNpgsqlConnection(builder.Configuration.GetConnectionString("Connection"))
+));
+
+builder.Services.AddHangfireServer();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -29,8 +42,23 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseHttpsRedirection();
+// Adicione essa opção para liberar o acesso ao painel de fora do container Docker
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new MyDashboardAuthorizationFilter() }
+});
+
 app.UseAuthorization();
 app.MapControllers();
+
+RecurringJob.AddOrUpdate<RecuperarLeadsSemReceitaUseCase>(
+    "lembrete-receita-14-dias",
+    useCase => useCase.ExecutarLembreteAutomaticoAsync(),
+    "0 9 * * *",
+    new RecurringJobOptions
+    {
+        TimeZone = TimeZoneInfo.Local
+    });
 
 await MigrateDatabase();
 app.Run();

@@ -13,6 +13,7 @@ services:
       - ConnectionStrings__Connection=Host=postgres_db;Port=5432;Database=evolution_db;Username=postgres;Password=postgresadmin
       - ASPNETCORE_URLS=http://+:8080
       - EvolutionApi__BaseUrl=http://evolution-api:8080
+      - TZ=America/Sao_Paulo
     depends_on:
       postgres_db:
         condition: service_healthy 

@@ -9,3 +9,4 @@ C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Domain.CronosBot\obj\Debug\net10.
 C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Domain.CronosBot\obj\Debug\net10.0\refint\Domain.CronosBot.dll
 C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Domain.CronosBot\obj\Debug\net10.0\Domain.CronosBot.pdb
 C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Domain.CronosBot\obj\Debug\net10.0\ref\Domain.CronosBot.dll
+C:\Users\FELIPE\Downloads\csharp\BotAtendimeno\Domain.CronosBot\obj\Debug\net10.0\Domain.CronosBot.sourcelink.json

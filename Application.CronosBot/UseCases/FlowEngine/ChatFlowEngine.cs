@@ -104,13 +104,16 @@ namespace Application.CronosBot.UseCases.FlowEngine
                 return;
             }
 
+            chatSession.SetPrescription(true);
+            chatSession.MoveToNextStep(ChatStep.AguardandoEspecificacaoProduto);
+
+            await _chatSessionRepository.Update(chatSession);
+            await _unitOfWork.Commit();
+
             var msgSucesso = "Receita recebida com sucesso! ✅\n\nPara seguirmos com o orçamento correto, por favor, responda com o *número* da opção que você procura:\n\n1️⃣ - Lentes Multifocais\n2️⃣ - Altos Graus\n3️⃣ - Armações Técnicas\n4️⃣ - Lentes de Contato\n5️⃣ - Outros";
 
             await _whatsappProvider.SendTextMessage(chatSession.User.PhoneNumber, msgSucesso, context.InstanceName);
-
-            chatSession.MoveToNextStep(ChatStep.AguardandoEspecificacaoProduto);
-            await _chatSessionRepository.Update(chatSession);
-            await _unitOfWork.Commit();
+ 
         }
 
         private async Task HandleAguardandoEspecificacaoProdutoAsync(ChatSession chatSession, IncomingMessageContext context)

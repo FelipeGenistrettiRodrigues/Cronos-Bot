@@ -1,7 +1,6 @@
 ﻿using Application.CronosBot.AutoMapper;
-using Application.CronosBot.UseCases.CallApiEvolution;
 using Application.CronosBot.UseCases.FlowEngine;
-using Microsoft.Extensions.Configuration;
+using Application.CronosBot.UseCases.FollowUpLeads;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.CronosBot
@@ -17,6 +16,7 @@ namespace Application.CronosBot
         private static void AddUseCase(IServiceCollection service)
         {
             service.AddScoped<IChatFlowEngine, ChatFlowEngine>();
+            service.AddScoped<IRecuperarLeadsSemReceitaUseCase, RecuperarLeadsSemReceitaUseCase>();
         }
 
         private static void AddAutoMapper(IServiceCollection service)
