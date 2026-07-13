@@ -13,14 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient<IWhatsappProvider, EvolutionApiProvider>((provider, client) =>
 {
     var config = provider.GetRequiredService<IConfiguration>();
-    client.BaseAddress = new Uri(config["EvolutionApi:BaseUrl"]!);
-    client.DefaultRequestHeaders.Add("apikey", config["EvolutionApi:ApiKey"]);
+    var baseUrl = config["EvolutionApi:BaseUrl"] ?? throw new InvalidOperationException("EvolutionApi:BaseUrl não configurada.");
+    var apiKey = config["EvolutionApi:ApiKey"] ?? throw new InvalidOperationException("EvolutionApi:ApiKey não configurada.");
+
+    client.BaseAddress = new Uri(baseUrl);
+    client.DefaultRequestHeaders.Add("apikey", apiKey);
 });
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<ApiKeyAuthFilter>();
-
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -29,10 +31,12 @@ builder.Services.AddHangfire(config => config
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
     .UsePostgreSqlStorage(options =>
-        options.UseNpgsqlConnection(builder.Configuration.GetConnectionString("Connection"))
-));
+        options.UseNpgsqlConnection(builder.Configuration.GetConnectionString("Connection"))));
 
-builder.Services.AddHangfireServer();
+builder.Services.AddHangfireServer(options =>
+{
+    options.WorkerCount = Environment.ProcessorCount * 2;
+});
 
 var app = builder.Build();
 
@@ -41,7 +45,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-//app.UseHttpsRedirection();
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
     Authorization = new[] { new MyDashboardAuthorizationFilter() }
@@ -50,25 +53,22 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 app.UseAuthorization();
 app.MapControllers();
 
+var fusoSaoPaulo = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
+
 RecurringJob.AddOrUpdate<IRecuperarLeadsSemReceitaUseCase>(
     "lembrete-receita-5-dias",
     useCase => useCase.ExecutarLembreteAutomaticoAsync(TipoLembreteReceita.CincoDias),
-    "0 9 * * *", // Expressão Cron: Roda todo dia às 09:00
-    new RecurringJobOptions
-    {
-        TimeZone = TimeZoneInfo.Local
-    });
+    "0 9 * * *",
+    new RecurringJobOptions { TimeZone = fusoSaoPaulo });
 
 RecurringJob.AddOrUpdate<IRecuperarLeadsSemReceitaUseCase>(
     "lembrete-receita-14-dias",
-    useCase => useCase.ExecutarLembreteAutomaticoAsync(TipoLembreteReceita.QuatorzeDias), 
-    "30 9 * * *", // Expressão Cron: Roda todo dia às 09:30 
-    new RecurringJobOptions
-    {
-        TimeZone = TimeZoneInfo.Local
-    });
+    useCase => useCase.ExecutarLembreteAutomaticoAsync(TipoLembreteReceita.QuatorzeDias),
+    "30 9 * * *",
+    new RecurringJobOptions { TimeZone = fusoSaoPaulo });
 
 await MigrateDatabase();
+
 app.Run();
 
 async Task MigrateDatabase()

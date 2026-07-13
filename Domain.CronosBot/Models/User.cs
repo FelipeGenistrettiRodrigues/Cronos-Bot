@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Domain.CronosBot.Models
+﻿namespace Domain.CronosBot.Models
 {
     public class User
     {
