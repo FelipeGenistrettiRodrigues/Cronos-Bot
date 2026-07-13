@@ -1,7 +1,9 @@
-﻿namespace Application.CronosBot.UseCases.FollowUpLeads
+﻿using Domain.CronosBot.Models.Enums;
+
+namespace Application.CronosBot.UseCases.FollowUpLeads
 {
     public interface IRecuperarLeadsSemReceitaUseCase
     {
-        Task ExecutarLembreteAutomaticoAsync();
+        Task ExecutarLembreteAutomaticoAsync(TipoLembreteReceita tipoLembrete);
     }
 }

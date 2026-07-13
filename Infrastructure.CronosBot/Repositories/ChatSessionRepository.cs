@@ -30,10 +30,10 @@ namespace Infrastructure.CronosBot.Repositories
             _dbContext.Sessions.Update(chatSession);
         }
 
-        public async Task<List<ChatSession>> GetSessionsStuckInStep(ChatStep step, DateTime dataLimite)
+        public async Task<List<ChatSession>> GetSessionsStuckInStep(ChatStep step, DateTime dataLimite, EstagioLembreteReceita estagioRequerido)
         {
             return await _dbContext.Sessions.Include(s => s.User).
-                Where(s => s.IsActive && !s.hasPrescription && s.ReminderSentAt == null && s.CurrentStep == step && s.LastInteraction <= dataLimite).ToListAsync();
+                Where(s => s.IsActive && !s.hasPrescription && s.ReminderSentAt == null && s.CurrentStep == step && s.EstagioLembreteReceita == estagioRequerido && s.LastInteraction <= dataLimite).ToListAsync();
         }
     }
 }

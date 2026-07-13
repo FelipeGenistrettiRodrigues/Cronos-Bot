@@ -10,6 +10,6 @@ namespace Domain.CronosBot.Repositories
 
         Task Update(ChatSession chatSession);
 
-        Task<List<ChatSession>> GetSessionsStuckInStep(ChatStep step, DateTime dataLimite);
+        Task<List<ChatSession>> GetSessionsStuckInStep(ChatStep step, DateTime dataLimite, EstagioLembreteReceita estagioRequerido);
     }
 }

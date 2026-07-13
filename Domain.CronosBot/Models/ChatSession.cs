@@ -15,6 +15,7 @@ namespace Domain.CronosBot.Models
         public bool IsActive { get; private set; }
         public bool hasPrescription { get; private set; }
         public DateTime? ReminderSentAt { get; private set; }
+        public EstagioLembreteReceita EstagioLembreteReceita { get; private set; }
 
         protected ChatSession() { }
 
@@ -40,6 +41,18 @@ namespace Domain.CronosBot.Models
             IsActive = active;
         }
 
+        public void SetLembreteCincoDiasEnviado()
+        {
+            EstagioLembreteReceita = EstagioLembreteReceita.LembreteCincoDiasEnviado;
+            LastInteraction = DateTime.UtcNow; 
+        }
+
+        public void SetLembreteQuatorzeDiasEnviado()
+        {
+            EstagioLembreteReceita = EstagioLembreteReceita.LembreteQuatorzeDiasEnviado;
+            LastInteraction = DateTime.UtcNow;
+        }
+
         public void SetPrescription(bool prescription)
         {
             hasPrescription = prescription;
@@ -54,6 +67,11 @@ namespace Domain.CronosBot.Models
         public bool IsExpired()
         {
             var expirationTime = TimeSpan.FromDays(14);
+
+            if (CurrentStep == ChatStep.AguardandoReceitaMedica)
+            {
+                expirationTime = TimeSpan.FromDays(30);
+            }
 
             bool passouDoTempo = DateTime.UtcNow - LastInteraction > expirationTime;
 

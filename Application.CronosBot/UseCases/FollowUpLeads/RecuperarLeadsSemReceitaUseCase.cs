@@ -4,46 +4,78 @@ using Domain.CronosBot.Models;
 using Domain.CronosBot.Models.Enums;
 using Domain.CronosBot.Repositories;
 
-public class RecuperarLeadsSemReceitaUseCase : IRecuperarLeadsSemReceitaUseCase
+namespace Application.CronosBot.UseCases.FollowUpLeads
 {
-    private readonly IChatSessionRepository _sessionRepository;
-    private readonly IWhatsappProvider _whatsappProvider;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public RecuperarLeadsSemReceitaUseCase(
-        IChatSessionRepository sessionRepository,
-        IWhatsappProvider whatsappProvider,
-        IUnitOfWork unitOfWork)
+    public class RecuperarLeadsSemReceitaUseCase : IRecuperarLeadsSemReceitaUseCase
     {
-        _sessionRepository = sessionRepository;
-        _whatsappProvider = whatsappProvider;
-        _unitOfWork = unitOfWork;
-    }
-    public async Task ExecutarLembreteAutomaticoAsync()
-    {
-        var dataLimite = DateTime.UtcNow.AddDays(-14);
-        List<ChatSession> sessoesEsquecidas = await _sessionRepository.GetSessionsStuckInStep(ChatStep.AguardandoReceitaMedica, dataLimite);
+        private readonly IChatSessionRepository _sessionRepository;
+        private readonly IWhatsappProvider _whatsappProvider;
+        private readonly IUnitOfWork _unitOfWork;
 
-        var random = new Random();
-
-        foreach (var sessao in sessoesEsquecidas)
+        public RecuperarLeadsSemReceitaUseCase(
+            IChatSessionRepository sessionRepository,
+            IWhatsappProvider whatsappProvider,
+            IUnitOfWork unitOfWork)
         {
-            try
-            {
-                string msgLembrete = $"Olá {sessao.User.Name}! Passando para lembrar que ainda não recebemos a foto da sua receita médica. 👓\n\nSe tiver ela aí, é só mandar por aqui para liberarmos seu orçamento! Se não estiver com ela, digite *0* para falar com um atendente.";
-
-                await _whatsappProvider.SendTextMessage(sessao.User.PhoneNumber, msgLembrete, sessao.PhoneId);
-
-                sessao.MarcarLembreteEnviado();
-                await _sessionRepository.Update(sessao);
-
-                await Task.Delay(random.Next(5000, 12000));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Falha ao lembrar lead {sessao.User.PhoneNumber}: {ex.Message}");
-            }
+            _sessionRepository = sessionRepository;
+            _whatsappProvider = whatsappProvider;
+            _unitOfWork = unitOfWork;
         }
-        await _unitOfWork.Commit();
+
+        public async Task ExecutarLembreteAutomaticoAsync(TipoLembreteReceita tipoLembrete)
+        {
+            var regra = DefinirTipoLembrete(tipoLembrete);
+
+            var dataLimite = DateTime.UtcNow.AddDays(-regra.DiasAtraso);
+
+            List<ChatSession> sessoesEsquecidas = await _sessionRepository.GetSessionsStuckInStep(
+                ChatStep.AguardandoReceitaMedica,
+                dataLimite,
+                regra.EstagioRequerido            
+            );
+
+            var random = new Random();
+
+            foreach (var sessao in sessoesEsquecidas)
+            {
+                try
+                {
+                    string msgLembrete = regra.MensagemFactory(sessao.User.Name);
+
+                    await _whatsappProvider.SendTextMessage(sessao.User.PhoneNumber, msgLembrete, sessao.PhoneId);
+
+                    regra.AcaoAtualizar(sessao);
+                    await _sessionRepository.Update(sessao);
+
+                    await Task.Delay(random.Next(5000, 12000));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Falha ao lembrar lead {sessao.User.PhoneNumber}: {ex.Message}");
+                }
+            }
+
+            await _unitOfWork.Commit();
+        }
+
+        private (int DiasAtraso, EstagioLembreteReceita EstagioRequerido, Func<string, string> MensagemFactory, Action<ChatSession> AcaoAtualizar) DefinirTipoLembrete(TipoLembreteReceita tipoLembrete)
+        {
+            return tipoLembrete switch
+            {
+                TipoLembreteReceita.CincoDias => (
+                    5,
+                    EstagioLembreteReceita.Nenhum,
+                    (string nome) => $"Oi {nome}! Conseguiu agendar sua consulta para adquirir sua receita? Se precisar de ajuda, me avise!",
+                    (ChatSession s) => s.SetLembreteCincoDiasEnviado()
+                ),
+                TipoLembreteReceita.QuatorzeDias => (
+                    14,
+                    EstagioLembreteReceita.LembreteCincoDiasEnviado,
+                    (string nome) => $"Olá {nome}! Passando para lembrar da foto da sua receita médica. 👓\n\nSe já tiver com ela, é só mandar aqui!",
+                    (ChatSession s) => s.SetLembreteQuatorzeDiasEnviado()
+                ),
+                _ => throw new ArgumentException("Tipo de lembrete não suportado.")
+            };
+        }
     }
 }

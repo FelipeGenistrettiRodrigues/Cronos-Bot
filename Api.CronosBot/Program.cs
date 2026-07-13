@@ -1,9 +1,9 @@
 using Api.CronosBot.FIlters;
 using Application.CronosBot;
 using Application.CronosBot.UseCases.CallApiEvolution;
-using Application.CronosBot.UseCases.FlowEngine;
+using Application.CronosBot.UseCases.FollowUpLeads;
+using Domain.CronosBot.Models.Enums;
 using Hangfire;
-using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using Infrastructure.CronosBot;
 using Infrastructure.CronosBot.Migrations;
@@ -42,7 +42,6 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseHttpsRedirection();
-// Adicione essa opção para liberar o acesso ao painel de fora do container Docker
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
     Authorization = new[] { new MyDashboardAuthorizationFilter() }
@@ -51,10 +50,19 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 app.UseAuthorization();
 app.MapControllers();
 
-RecurringJob.AddOrUpdate<RecuperarLeadsSemReceitaUseCase>(
+RecurringJob.AddOrUpdate<IRecuperarLeadsSemReceitaUseCase>(
+    "lembrete-receita-5-dias",
+    useCase => useCase.ExecutarLembreteAutomaticoAsync(TipoLembreteReceita.CincoDias),
+    "0 9 * * *", // Expressão Cron: Roda todo dia às 09:00
+    new RecurringJobOptions
+    {
+        TimeZone = TimeZoneInfo.Local
+    });
+
+RecurringJob.AddOrUpdate<IRecuperarLeadsSemReceitaUseCase>(
     "lembrete-receita-14-dias",
-    useCase => useCase.ExecutarLembreteAutomaticoAsync(),
-    "0 9 * * *",
+    useCase => useCase.ExecutarLembreteAutomaticoAsync(TipoLembreteReceita.QuatorzeDias), 
+    "30 9 * * *", // Expressão Cron: Roda todo dia às 09:30 
     new RecurringJobOptions
     {
         TimeZone = TimeZoneInfo.Local
