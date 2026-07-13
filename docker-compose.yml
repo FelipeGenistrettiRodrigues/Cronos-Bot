@@ -14,7 +14,8 @@ services:
       - ASPNETCORE_URLS=http://+:8080
       - EvolutionApi__BaseUrl=http://evolution-api:8080
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy 
 
   evolution-api:
     image: evoapicloud/evolution-api:latest
@@ -38,10 +39,11 @@ services:
     volumes:
       - evolution_instances:/evolution/instances
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy
 
   postgres_db:
-    image: postgres:15-alpine
+    image: pgvector/pgvector:pg15
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -49,10 +51,15 @@ services:
       - POSTGRES_DB=evolution_db
     ports:
       - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d evolution_db"] 
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-# CORRIGIDO: Seção global de volumes isolada corretamente aqui embaixo
+# Secao global de volumes limpa e isolada
 volumes:
   evolution_instances:
   postgres_data:
