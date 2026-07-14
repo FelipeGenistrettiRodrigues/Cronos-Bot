@@ -1,12 +1,11 @@
 using Api.CronosBot.FIlters;
 using Application.CronosBot;
 using Application.CronosBot.UseCases.CallApiEvolution;
-using Application.CronosBot.UseCases.FollowUpLeads;
-using Domain.CronosBot.Models.Enums;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Infrastructure.CronosBot;
 using Infrastructure.CronosBot.Migrations;
+using Api.CronosBot.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +21,9 @@ builder.Services.AddHttpClient<IWhatsappProvider, EvolutionApiProvider>((provide
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddScoped<ILembreteJobs, LembreteJobs>();
 builder.Services.AddScoped<ApiKeyAuthFilter>();
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -55,15 +56,15 @@ app.MapControllers();
 
 var fusoSaoPaulo = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
 
-RecurringJob.AddOrUpdate<IRecuperarLeadsSemReceitaUseCase>(
+RecurringJob.AddOrUpdate<ILembreteJobs>(
     "lembrete-receita-5-dias",
-    useCase => useCase.ExecutarLembreteAutomaticoAsync(TipoLembreteReceita.CincoDias),
+    job => job.ExecutarLembreteCincoDiasAsync(),
     "0 9 * * *",
     new RecurringJobOptions { TimeZone = fusoSaoPaulo });
 
-RecurringJob.AddOrUpdate<IRecuperarLeadsSemReceitaUseCase>(
+RecurringJob.AddOrUpdate<ILembreteJobs>(
     "lembrete-receita-14-dias",
-    useCase => useCase.ExecutarLembreteAutomaticoAsync(TipoLembreteReceita.QuatorzeDias),
+    job => job.ExecutarLembreteQuatorzeDiasAsync(),
     "30 9 * * *",
     new RecurringJobOptions { TimeZone = fusoSaoPaulo });
 

@@ -1,5 +1,4 @@
 ﻿using Application.CronosBot.UseCases.CallApiEvolution;
-using Application.CronosBot.UseCases.FollowUpLeads;
 using Domain.CronosBot.Models;
 using Domain.CronosBot.Models.Enums;
 using Domain.CronosBot.Repositories;
@@ -34,8 +33,6 @@ namespace Application.CronosBot.UseCases.FollowUpLeads
                 regra.EstagioRequerido            
             );
 
-            var random = new Random();
-
             foreach (var sessao in sessoesEsquecidas)
             {
                 try
@@ -47,7 +44,9 @@ namespace Application.CronosBot.UseCases.FollowUpLeads
                     regra.AcaoAtualizar(sessao);
                     await _sessionRepository.Update(sessao);
 
-                    await Task.Delay(random.Next(5000, 12000));
+                    await _unitOfWork.Commit();
+
+                    await Task.Delay(Random.Shared.Next(5000, 12000));
                 }
                 catch (Exception ex)
                 {
@@ -55,7 +54,7 @@ namespace Application.CronosBot.UseCases.FollowUpLeads
                 }
             }
 
-            await _unitOfWork.Commit();
+            
         }
 
         private (int DiasAtraso, EstagioLembreteReceita EstagioRequerido, Func<string, string> MensagemFactory, Action<ChatSession> AcaoAtualizar) DefinirTipoLembrete(TipoLembreteReceita tipoLembrete)
