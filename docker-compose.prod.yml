@@ -47,6 +47,7 @@ services:
       - DATABASE_PROVIDER=postgresql
       - DATABASE_CONNECTION_CLIENT=pg
       - DATABASE_CONNECTION_URI=postgresql://postgres:postgresadmin@postgres_db:5432/evolution_db?schema=public
+      - PRISMA_MIGRATE_SKIP_GENERATE=true
       - AUTHENTICATION_API_KEY=a8f3c7d2-61b5-4e9a-bc04-83e215d74f69
       - CACHE_REDIS_ENABLED=false
       - CACHE_LOCAL_ENABLED=true
