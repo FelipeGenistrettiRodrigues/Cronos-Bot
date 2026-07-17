@@ -20,13 +20,15 @@ namespace Api.CronosBot.Controllers
         }
 
         [HttpPost("webhook")]
-        [ServiceFilter(typeof(ApiKeyAuthFilter))]
         public async Task<IActionResult> ReceiveMessage([FromBody] WebhookPayload payload)
         {
             if (payload?.Data?.Key == null)
                 return BadRequest("Payload inválido");
 
             if (payload.Data.Key.FromMe || payload.Event != "messages.upsert")
+                return Ok();
+
+            if (!string.IsNullOrEmpty(payload.Data.Key.RemoteJid) && payload.Data.Key.RemoteJid.EndsWith("@g.us"))
                 return Ok();
 
             IncomingMessageContext messageContext = _mapper.Map<IncomingMessageContext>(payload);

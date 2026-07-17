@@ -1,0 +1,43 @@
+name: Deploy to Hetzner Production
+
+on:
+  push:
+    branches:
+      - main # 🌟 Altere para 'master' se a sua branch principal tiver esse nome
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Executar Deploy via SSH na VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: |
+            # 1. Garantir que a pasta do projeto existe
+            mkdir -p /app/cronosbot
+            cd /app/cronosbot
+
+            # 2. Se a pasta não for um repositório git ativo, clona. Se já for, atualiza.
+            if [ ! -d ".git" ]; then
+              git clone https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git .
+            else
+              git fetch --all
+              git reset --hard origin/main
+            fi
+
+            # 3. Derruba os containers antigos e limpa imagens antigas para não lotar o disco
+            docker compose -f docker-compose.prod.yml down --remove-orphans
+            
+            # 4. Sobe tudo atualizado compilando a nova versão da API
+            docker compose -f docker-compose.prod.yml up -d --build
+            
+            # 5. Limpeza preventiva de lixo do Docker
+            docker image prune -f

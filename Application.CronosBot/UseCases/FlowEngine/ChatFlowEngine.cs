@@ -71,7 +71,7 @@ namespace Application.CronosBot.UseCases.FlowEngine
 
         private async Task HandleNovoLeadAsync(ChatSession chatSession, IncomingMessageContext context)
         {
-            var msg = $"Olá, {context.PushName}! Seja muito bem-vindo(a) à nossa Ótica! 👓✨\n\nPara agilizarmos o seu atendimento e encontrarmos a melhor lente para você, por favor, *envie uma foto ou o PDF da sua receita médica atualizada*.";
+            var msg = $"Olá, {context.PushName}! Seja muito bem-vindo(a) à Ótica Delivery! 👓✨\n\nPara agilizarmos o seu atendimento e encontrarmos a melhor lente para você, por favor, *envie uma foto ou o PDF da sua receita médica atualizada*.";
 
             await _whatsappProvider.SendTextMessage(chatSession.User.PhoneNumber, msg, context.InstanceName);
 
@@ -87,7 +87,7 @@ namespace Application.CronosBot.UseCases.FlowEngine
                 chatSession.RegistrarProdutoEscolhido(ProdutoDesejado.NaoEspecificado);
                 chatSession.MoveToNextStep(ChatStep.QualificacaoConcluida);
 
-                var msgTransbordo = "Sem problemas! Já acionei um de nossos consultores óticos. Em instantes ele assumirá o atendimento por aqui para te ajudar. 💙";
+                var msgTransbordo = "Sem problemas! Já acionei um de nossos especialistas. Em instantes ele assumirá o atendimento por aqui para te ajudar. 💙";
                 await _whatsappProvider.SendTextMessage(chatSession.User.PhoneNumber, msgTransbordo, context.InstanceName);
 
                 await _chatSessionRepository.Update(chatSession);
@@ -158,7 +158,7 @@ namespace Application.CronosBot.UseCases.FlowEngine
             chatSession.RegistrarProdutoEscolhido(produtoEnum);
             chatSession.MoveToNextStep(ChatStep.QualificacaoConcluida);
 
-            var msgSucesso = $"Perfeito! Anotei aqui que você busca por *{nomeProdutoParaMensagem}*. 📝\n\nUm de nossos consultores óticos já está com sua receita em mãos e vai assumir o atendimento por aqui em instantes para te passar os melhores orçamentos.\n\nObrigado por escolher a nossa ótica! 💙";
+            var msgSucesso = $"Perfeito! Anotei aqui que você busca por *{nomeProdutoParaMensagem}*. 📝\n\nUm de nossos especialistas já está com sua receita em mãos e vai assumir o atendimento por aqui em instantes para te passar os melhores orçamentos.\n\nObrigado por escolher a nossa ótica! 💙";
 
             await _whatsappProvider.SendTextMessage(chatSession.User.PhoneNumber, msgSucesso, context.InstanceName);
 

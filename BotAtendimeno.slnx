@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Workflows/">
+    <File Path="deploy.yml" />
+  </Folder>
   <Project Path="Api.CronosBot/Api.CronosBot.csproj" />
   <Project Path="Application.CronosBot/Application.CronosBot.csproj" />
   <Project Path="Communication.CronosBot/Communication.CronosBot.csproj" />

@@ -23,6 +23,11 @@ namespace Application.CronosBot.UseCases.CallApiEvolution
             };
 
             var response = await _httpClient.PostAsJsonAsync(url, payload);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorDetails = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro da Evolution API: Status {response.StatusCode} - Detalhes: {errorDetails}");
+            }
             response.EnsureSuccessStatusCode();
         }
     }
