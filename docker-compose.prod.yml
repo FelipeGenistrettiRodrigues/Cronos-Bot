@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+  nginx-proxy:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: always
+    ports:
+      - '80:80'   # Porta HTTP padrão
+      - '81:81'   # Porta do Painel de Administração do Nginx
+      - '443:443' # Porta HTTPS padrão
+    volumes:
+      - nginx_data:/data
+      - nginx_letsencrypt:/etc/letsencrypt
+    networks:
+      - cronos_net
+
   api.cronosbot:
     image: ${DOCKER_REGISTRY-}apicronosbot
     build:
@@ -28,7 +41,7 @@ services:
     image: evoapicloud/evolution-api:latest
     restart: always
     environment:
-      - SERVER_URL=http://168.119.155.232:8083 
+      - SERVER_URL=https://evo.botcronos.com.br 
       - ENV=prod 
       - API_KEY=a8f3c7d2-61b5-4e9a-bc04-83e215d74f69
       - DATABASE_PROVIDER=postgresql
@@ -74,3 +87,5 @@ networks:
 volumes:
   evolution_instances:
   postgres_data:
+  nginx_data:        
+  nginx_letsencrypt: 
