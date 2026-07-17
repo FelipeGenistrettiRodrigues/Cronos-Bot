@@ -52,7 +52,7 @@ services:
       - CACHE_LOCAL_ENABLED=true
       - LOG_LEVEL=ERROR,WARN 
     ports:
-      - "8083:8083"
+      - "8083:8080"
     networks:
       - cronos_net
     volumes:
