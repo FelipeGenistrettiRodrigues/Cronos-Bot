@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Domain.CronosBot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+26a03cc3e31b531b7c7a75cd98fb2bc3560dd2b3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c820c1aff18e4cd6ceb2c2595e356ad3238f17ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("Domain.CronosBot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Domain.CronosBot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

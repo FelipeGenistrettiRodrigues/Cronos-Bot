@@ -27,7 +27,7 @@ services:
       - ASPNETCORE_URLS=http://+:8080
       - ASPNETCORE_ENVIRONMENT=Production
       - EvolutionApi__ApiKey=a8f3c7d2-61b5-4e9a-bc04-83e215d74f69
-      - EvolutionApi__BaseUrl=http://evolution-api:8083
+      - EvolutionApi__BaseUrl=http://evolution-api:8080
       - TZ=America/Sao_Paulo
     networks:
       - cronos_net
