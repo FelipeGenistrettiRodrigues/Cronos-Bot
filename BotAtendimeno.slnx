@@ -1,5 +1,6 @@
 <Solution>
-  <Folder Name="/Workflows/">
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
     <File Path="deploy.yml" />
   </Folder>
   <Project Path="Api.CronosBot/Api.CronosBot.csproj" />
