@@ -12,8 +12,9 @@ services:
     environment:
       - ConnectionStrings__Connection=Host=postgres_db;Port=5432;Database=evolution_db;Username=postgres;Password=postgresadmin
       - ASPNETCORE_URLS=http://+:8080
-      - ASPNETCORE_ENVIRONMENT=Production 
-      - EvolutionApi__BaseUrl=http://evolution-api:8080
+      - ASPNETCORE_ENVIRONMENT=Production
+      - EvolutionApi__ApiKey=a8f3c7d2-61b5-4e9a-bc04-83e215d74f69
+      - EvolutionApi__BaseUrl=http://evolution-api:8083
       - TZ=America/Sao_Paulo
     networks:
       - cronos_net
@@ -38,7 +39,7 @@ services:
       - CACHE_LOCAL_ENABLED=true
       - LOG_LEVEL=ERROR,WARN 
     ports:
-      - "8083:8080"
+      - "8083:8083"
     networks:
       - cronos_net
     volumes:
